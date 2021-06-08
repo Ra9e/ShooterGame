@@ -23,6 +23,8 @@ public:
     void NextWeapon();
     void Reload();
 
+	bool GetWeaponUIData(FWeaponUIData& UIData) const;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
