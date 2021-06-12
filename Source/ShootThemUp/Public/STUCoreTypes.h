@@ -35,6 +35,8 @@ struct FWeaponData
     UAnimMontage* ReloadAnimMontage;
 };
 
+// UI
+
 USTRUCT(BlueprintType)
 struct FWeaponUIData
 {
