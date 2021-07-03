@@ -33,7 +33,12 @@ public:
 
 
 private:
+
+	float RotationYaw = 0.0f;
+
     virtual bool GivePickupTo(APawn* PlayerPawn);
+
     void PickupWasTaken();
     void Respawn();
+    void GenerateRotationYaw();
 };

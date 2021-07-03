@@ -8,6 +8,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class USTUWEaponFXComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
@@ -21,6 +22,9 @@ public:
 	void SetShotDirection(const FVector& Direction) { ShotDirection = Direction; }
 
 protected:
+    UPROPERTY(VisibleAnywhere, Category = "VFX")
+    USTUWEaponFXComponent* WeaponFXComponent;
+
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	USphereComponent* CollisionComponent;
 
