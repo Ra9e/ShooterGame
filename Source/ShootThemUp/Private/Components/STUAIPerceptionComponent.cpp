@@ -14,10 +14,10 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
     if (PercieveActors.Num() == 0) return nullptr;
     
     const auto Controller = Cast<AAIController>(GetOwner());
-    if (Controller) return nullptr;
+    if (!Controller) return nullptr;
 
     const auto Pawn = Controller->GetPawn();
-    if (Pawn) return nullptr;
+    if (!Pawn) return nullptr;
 
     float BestDistance = MAX_FLT;
     AActor* BestPawn = nullptr;
