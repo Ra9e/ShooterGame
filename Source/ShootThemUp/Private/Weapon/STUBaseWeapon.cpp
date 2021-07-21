@@ -43,8 +43,7 @@ void ASTUBaseWeapon::MakeShot() {}
 APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
     const auto Player = Cast<ACharacter>(GetOwner());
-    if (!Player)
-        return nullptr;
+    if (!Player) return nullptr;
 
     return Player->GetController<APlayerController>();
 }

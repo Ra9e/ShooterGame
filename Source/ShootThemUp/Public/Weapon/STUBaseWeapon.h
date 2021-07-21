@@ -29,6 +29,7 @@ public:
     bool CanReload() const;
 
     bool TryToAddAmmo(int32 ClipsAmount);
+    bool IsAmmoEmpty() const;
 
     FWeaponUIData GetUIData() const { return UIData; }
 
@@ -67,7 +68,7 @@ protected:
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
     void DecreaseAmmo();
-    bool IsAmmoEmpty() const;
+
     bool IsClipEmpty() const;
     bool IsAmmoFull() const;
 
