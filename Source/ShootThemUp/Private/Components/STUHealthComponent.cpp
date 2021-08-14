@@ -8,6 +8,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Camera/CameraShake.h"
+#include "STUUtils.h"
+#include "STUGameModeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -40,6 +42,14 @@ void USTUHealthComponent::BeginPlay()
 void USTUHealthComponent::OnTakeAmyDamage(
     AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
+    // ѕроверка на союзного игрока, если союзник урон не наносим
+    // TODO: сделать урон от самого себ€
+    //const auto Player = Cast<APawn>(GetOwner());
+    //const auto VictimController = Player ? Player->Controller : nullptr;
+
+    //const auto AreEnemies = STUUtils::AreEnemies(VictimController, InstigatedBy);
+    //if (!AreEnemies) return;
+
     if (Damage <= 0.0f || IsDead() || !GetWorld()) return;
 	// clamp (значение, если меньше возвращает 0.0f, если больше то макс«доровье) две границы
     SetHealth(Health - Damage);
@@ -48,6 +58,7 @@ void USTUHealthComponent::OnTakeAmyDamage(
 
 	if (IsDead())
 	{
+        Killed(InstigatedBy);
         OnDeath.Broadcast();
 	}
     else if (AutoHeal && GetWorld())
@@ -101,4 +112,17 @@ void USTUHealthComponent::PlayCameraShake()
     if (!Controller || !Controller->PlayerCameraManager) return;
 
     Controller->PlayerCameraManager->StartCameraShake(CameraShake);
+}
+
+void USTUHealthComponent::Killed(AController* KillerController) 
+{
+    if (!GetWorld()) return;
+
+    const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+    if (!GameMode) return;
+    
+    const auto Player = Cast<APawn>(GetOwner());
+    const auto VictimController = Player ? Player->Controller : nullptr;
+
+    GameMode->Killed(KillerController, VictimController);
 }

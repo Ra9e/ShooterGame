@@ -30,6 +30,7 @@ public:
 
     bool TryToAddAmmo(int32 ClipsAmount);
     bool IsAmmoEmpty() const;
+    bool IsAmmoFull() const;
 
     FWeaponUIData GetUIData() const { return UIData; }
 
@@ -61,7 +62,6 @@ protected:
 	virtual void MakeShot();
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 
-    APlayerController* GetPlayerController() const;
     bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
     FVector GetMuzzleWorldLocation() const;
 
@@ -70,7 +70,6 @@ protected:
     void DecreaseAmmo();
 
     bool IsClipEmpty() const;
-    bool IsAmmoFull() const;
 
     void LogAmmo();
 

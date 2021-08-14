@@ -22,6 +22,7 @@ public:
     void StopFire();
     virtual void NextWeapon();
     void Reload();
+    bool NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType);
 
 	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
     bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
