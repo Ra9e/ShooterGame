@@ -7,8 +7,13 @@
 #include "UI/STUGameHUD.h"
 #include "AIController.h"
 #include "Player/STUPlayerState.h"
+#include "STUUtils.h"
+#include "Components/STURespawnComponent.h"
+#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameMode, All, All);
+
+constexpr static int32 MinRoundTimeForRespawn = 10;
 
 ASTUGameModeBase::ASTUGameModeBase() 
 {
@@ -77,8 +82,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         }
         else
         {
-            UE_LOG(LogSTUGameMode, Display, TEXT("=============== GAME OVER ==============="));
-            LogPlayerInfo();
+            GameOver();
         }
     }
 }
@@ -153,18 +157,41 @@ void ASTUGameModeBase::Killed(AController* KillerController, AController* Victim
     const auto KillerPlayerState = KillerController ? Cast<ASTUPlayerState>(KillerController->PlayerState) : nullptr;
     const auto VictimPlayerState = VictimController ? Cast<ASTUPlayerState>(VictimController->PlayerState) : nullptr;
     
+    const auto AreEnemies = STUUtils::AreEnemies(KillerController, VictimController);
+
     if (KillerPlayerState)
     {
-        KillerPlayerState->AddKill();
+        if (AreEnemies) // Проверка на противника
+            KillerPlayerState->AddKill();
+        else            // Если убили союзника, забираем поинт
+            KillerPlayerState->MinusKill();
     }
 
     if (VictimPlayerState)
     {
         VictimPlayerState->AddDeath();
     }
+
+    StartRespawn(VictimController);
 }
 
-void ASTUGameModeBase::LogPlayerInfo() 
+void ASTUGameModeBase::RespawnRequest(AController* Controller) 
+{
+    ResetOnePlayer(Controller);
+}
+
+void ASTUGameModeBase::StartRespawn(AController* Controller) 
+{
+    const auto RespawnAvailable = RoundCountDown > MinRoundTimeForRespawn + GameData.RespawnTime;
+    if (!RespawnAvailable) return;
+
+    const auto RespawnComponent = STUUtils::GetSTUPlayerComponent<USTURespawnComponent>(Controller);
+    if (!RespawnComponent) return;
+    
+    RespawnComponent->Respawn(GameData.RespawnTime);
+}
+
+void ASTUGameModeBase::LogPlayerInfo()
 {
     if (!GetWorld()) return;
 
@@ -177,5 +204,20 @@ void ASTUGameModeBase::LogPlayerInfo()
         if (!PlayerState) continue;
      
         PlayerState->LogInfo();
+    }
+}
+
+void ASTUGameModeBase::GameOver() 
+{
+    UE_LOG(LogSTUGameMode, Display, TEXT("=============== GAME OVER ==============="));
+    LogPlayerInfo();
+
+    for (auto Pawn: TActorRange<APawn>(GetWorld()))
+    {
+        if (Pawn)
+        {
+            Pawn->TurnOff();
+            Pawn->DisableInput(nullptr);
+        }
     }
 }
