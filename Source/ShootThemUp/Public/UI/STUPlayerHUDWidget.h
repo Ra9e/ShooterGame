@@ -35,4 +35,5 @@ public:
 
 private:
     void OnHealthCanged(float Health, float HealthDelta);
+    void OnNewPawn(APawn* NewPawn);
 };

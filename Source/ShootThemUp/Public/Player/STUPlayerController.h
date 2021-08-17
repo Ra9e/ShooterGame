@@ -19,4 +19,6 @@ public:
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
     USTURespawnComponent* RespawnComponent;
+
+    virtual void OnPossess(APawn* aPawn) override;
 };
