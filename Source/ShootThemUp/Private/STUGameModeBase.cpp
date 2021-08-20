@@ -114,6 +114,7 @@ void ASTUGameModeBase::CreateTeamsInfo()
     if (!GetWorld()) return;
 
     int32 TeamID = 1;
+    int32 CountBots = 1;
     for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
     {
         const auto Controller = It->Get();
@@ -124,8 +125,11 @@ void ASTUGameModeBase::CreateTeamsInfo()
 
         PlayerState->SetTeamID(TeamID);
         PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID));
+        PlayerState->SetPlayerName(Controller->IsPlayerController() ? "Player" : "Bot " + FString::FromInt(CountBots));
         SetPlayerColor(Controller);
 
+        if (!Controller->IsPlayerController())
+            CountBots = ++CountBots;
         TeamID = TeamID == 1 ? 2 : 1;
     }
 }
