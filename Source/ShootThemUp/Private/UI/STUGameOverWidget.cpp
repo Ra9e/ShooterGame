@@ -7,9 +7,13 @@
 #include "Player/STUPlayerState.h"
 #include "UI/STUPlayerStatRowWidget.h"
 #include "STUUtils.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
-bool USTUGameOverWidget::Initialize()
+void USTUGameOverWidget::NativeOnInitialized()
 {
+    Super::NativeOnInitialized();
+
 	if (GetWorld())
 	{
         const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -19,7 +23,10 @@ bool USTUGameOverWidget::Initialize()
 		}
 	}
 
-	return Super::Initialize();
+	if (ResetLevelButton)
+    {
+        ResetLevelButton->OnClicked.AddDynamic(this, &USTUGameOverWidget::OnResetLevel);
+	}
 }
 
 void USTUGameOverWidget::OnMatchStateChanged(ESTUMatchState State)
@@ -55,4 +62,17 @@ void USTUGameOverWidget::UpdatePlayerStat()
 
 		PlayerStatBox->AddChild(PlayerStatRowWidget);
 	}
+}
+
+void USTUGameOverWidget::OnResetLevel() 
+{
+	// HARD RESET
+    //const FName CurrentLevelName = "TestLevel";
+    const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
+    UGameplayStatics::OpenLevel(this, FName(CurrentLevelName));
+
+	// SOFT RESET - делается с помощью функции ResetLevel из класса GameModeBase
+	// она вызывает специальную функцию Reset для всех акторов на сцене, но при этом
+	// её придётся реализовать почти для каждого класса 
+	// но этот способ позволяет не пересоздавать все объекты
 }
