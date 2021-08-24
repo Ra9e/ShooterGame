@@ -41,6 +41,7 @@ protected:
     FName MaterialColorName = "Paint Color";
 
 	virtual void OnDeath();
+    virtual void OnHealthChanged(float Health, float HealthDelta);
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -58,8 +59,6 @@ public:
 	void SetPlayerColor(const FLinearColor& Color);
 
 private:
-    void OnHealthChanged(float Health, float HealthDelta);
-
 	UFUNCTION()
     void OnGroundLanded(const FHitResult& Hit);
 
