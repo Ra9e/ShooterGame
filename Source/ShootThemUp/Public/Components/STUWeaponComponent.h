@@ -29,6 +29,8 @@ public:
 
 	bool TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount);
 
+	void Zoom(bool Enabled);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

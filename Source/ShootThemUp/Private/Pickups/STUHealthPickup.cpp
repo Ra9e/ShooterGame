@@ -4,6 +4,8 @@
 #include "Pickups/STUHealthPickup.h"
 #include "Components/STUHealthComponent.h"
 #include "STUUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthPickup, All, All);
 

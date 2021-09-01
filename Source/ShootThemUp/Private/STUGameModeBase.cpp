@@ -68,7 +68,7 @@ void ASTUGameModeBase::StartRound()
 
 void ASTUGameModeBase::GameTimerUpdate() 
 {
-    UE_LOG(LogSTUGameMode, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
+    //UE_LOG(LogSTUGameMode, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
     
     // const auto TimerRate = GetWorldTimerManager().GetTimerRate(GameRoundTimerHandle);    ниже мы предполагаем что таймер срабатывает 1 раз в сек 
     // RoundCountDown -= TimerRate;                                                         можно от этого избавиться, вытащив таймер рейт из нашего хендлера
