@@ -3,6 +3,8 @@
 
 #include "Components/STUHealthComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/Actor.h"
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -36,8 +38,8 @@ void USTUHealthComponent::BeginPlay()
     if (ComponentOwner)
     {
         ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &USTUHealthComponent::OnTakeAmyDamage);
-        ComponentOwner->OnTakePointDamage.AddDynamic(this, &USTUHealthComponent::OnTakePointDamage);
-        ComponentOwner->OnTakeRadialDamage.AddDynamic(this, &USTUHealthComponent::OnTakeRadialDamage);
+    //    ComponentOwner->OnTakePointDamage.AddDynamic(this, &USTUHealthComponent::OnTakePointDamage);
+    //    ComponentOwner->OnTakeRadialDamage.AddDynamic(this, &USTUHealthComponent::OnTakeRadialDamage);
 	}
 }
 
@@ -71,8 +73,7 @@ void USTUHealthComponent::OnTakeAmyDamage(
     // const auto AreEnemies = STUUtils::AreEnemies(VictimController, InstigatedBy);
     // if (!AreEnemies) return;
 
-    if (Damage <= 0.0f || IsDead() || !GetWorld())
-        return;
+    if (Damage <= 0.0f || IsDead() || !GetWorld()) return;
     // clamp (значение, если меньше возвращает 0.0f, если больше то макс«доровье) две границы
     SetHealth(Health - Damage);
 
