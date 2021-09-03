@@ -91,8 +91,6 @@ void ASTURifleWeapon::MakeDamage(const FHitResult& HitResult)
     const auto DamageActor = HitResult.GetActor();
     if (!DamageActor) return;
 
-//     FPointDamageEvent PointDamageEvent;
-//     PointDamageEvent.HitInfo = HitResult;
     DamageActor->TakeDamage(RifleDamage, FDamageEvent(), GetController(), this);
 }
 
