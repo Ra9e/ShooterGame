@@ -82,4 +82,6 @@ private:
     void Killed(AController* KillerController);
     void ApplyDamage(float Damage, AController* InstigatedBy);
     float GetPointDamageModifier(AActor* DamageActor, const FName& BoneName);
+
+    void ReportDamageEvent(float Damage, AController* InstigatedBy);
 };

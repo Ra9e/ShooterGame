@@ -3,8 +3,6 @@
 
 #include "Components/STUHealthComponent.h"
 #include "GameFramework/Character.h"
-//#include "GameFramework/Actor.h"
-//#include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -12,6 +10,7 @@
 #include "STUUtils.h"
 #include "STUGameModeBase.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "Perception/AISense_Damage.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -92,6 +91,7 @@ void USTUHealthComponent::ApplyDamage(float Damage, AController* InstigatedBy)
     }
 
     PlayCameraShake();
+    ReportDamageEvent(Damage, InstigatedBy);
 }
 
 void USTUHealthComponent::HealUpdate()
@@ -155,15 +155,26 @@ void USTUHealthComponent::Killed(AController* KillerController)
 float USTUHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName)
 {
     const auto Character = Cast<ACharacter>(DamagedActor);
-    if (!Character || //
+    if (!Character ||            //
         !Character->GetMesh() || //
         !Character->GetMesh()->GetBodyInstance(BoneName))
         return 1.0f;
 
     const auto PhysMaterial = Character->GetMesh()->GetBodyInstance(BoneName)->GetSimplePhysicalMaterial();
-
-    //const auto PhysMaterial = Character->GetMesh()->GetBodyInstance(BoneName)->GetSimplePhysicalMaterial();
-    //if (!PhysMaterial || !DamageModifiers.Contains(PhysMaterial)) return 1.0f;
+    if (!PhysMaterial || !DamageModifiers.Contains(PhysMaterial))
+        return 1.0f;
 
     return DamageModifiers[PhysMaterial];
+}
+
+void USTUHealthComponent::ReportDamageEvent(float Damage, AController* InstigatedBy) 
+{
+    if (!InstigatedBy || !InstigatedBy->GetPawn() || !GetOwner()) return;
+
+    UAISense_Damage::ReportDamageEvent(GetWorld(),   //
+        GetOwner(),                                  //
+        InstigatedBy->GetPawn(),                     //
+        Damage,                                      //
+        InstigatedBy->GetPawn()->GetActorLocation(), //
+        GetOwner()->GetActorLocation());
 }
